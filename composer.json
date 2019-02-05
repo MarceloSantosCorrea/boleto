@@ -1,0 +1,30 @@
+{
+    "name": "marcelo-correa/boleto",
+    "description": "Gerador de Boletos em PDF",
+    "type": "library",
+    "keywords": [
+        "boleto",
+        "pdf",
+        "marcelo-correa"
+    ],
+    "homepage": "http://maximweb.com.br",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Marcelo Corrêa",
+            "email": "marcelocorrea229@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.1.22",
+        "setasign/fpdf": "~1.8",
+        "mpdf/mpdf": "~6",
+        "twig/twig": "~1.0",
+        "picqer/php-barcode-generator": "^0.1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Boleto\\": "src/"
+        }
+    }
+}
