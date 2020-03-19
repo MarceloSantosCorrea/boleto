@@ -19,7 +19,7 @@
         "php": ">=7.1.10",
         "setasign/fpdf": "~1.8",
         "mpdf/mpdf": "~6",
-        "twig/twig": "~1.0",
+        "twig/twig": "^3.0",
         "picqer/php-barcode-generator": "^0.1.0"
     },
     "autoload": {
