@@ -26,7 +26,7 @@ class Modulo
 {
     public static function modulo11($num, $base = 9, $r = 0)
     {
-        $soma  = 0;
+        $soma = 0;
         $fator = 2;
 
         /* Separacao dos numeros */
@@ -46,7 +46,7 @@ class Modulo
 
         /* Calculo do modulo 11 */
         if ($r == 0) {
-            $soma   *= 10;
+            $soma *= 10;
             $digito = $soma % 11;
             if ($digito == 10) {
                 $digito = 0;
@@ -54,16 +54,14 @@ class Modulo
 
             return $digito;
         } elseif ($r == 1) {
-            $resto = $soma % 11;
-
-            return $resto;
+            return $soma % 11;
         }
     }
 
-    public static function modulo10($num)
+    public static function modulo10($num): int
     {
         $numtotal10 = 0;
-        $fator      = 2;
+        $fator = 2;
 
         // Separacao dos numeros
         for ($i = strlen($num); $i > 0; $i--) {
@@ -71,7 +69,7 @@ class Modulo
             $numeros[$i] = substr($num, $i - 1, 1);
             // Efetua multiplicacao do numero pelo (falor 10)
             // 2002-07-07 01:33:34 Macete para adequar ao Mod10 do Itaú
-            $temp  = $numeros[$i] * $fator;
+            $temp = $numeros[$i] * $fator;
             $temp0 = 0;
             foreach (preg_split('//', $temp, -1, PREG_SPLIT_NO_EMPTY) as $k => $v) {
                 $temp0 += $v;
@@ -79,16 +77,13 @@ class Modulo
             $parcial10[$i] = $temp0; //$numeros[$i] * $fator;
             // monta sequencia para soma dos digitos no (modulo 10)
             $numtotal10 += $parcial10[$i];
-            if ($fator == 2) {
-                $fator = 1;
-            } else {
-                $fator = 2; // intercala fator de multiplicacao (modulo 10)
-            }
+
+            $fator = ($fator == 2) ? 1 : 2; // intercala fator de multiplicacao (modulo 10)
         }
 
         // várias linhas removidas, vide função original
         // Calculo do modulo 10
-        $resto  = $numtotal10 % 10;
+        $resto = $numtotal10 % 10;
         $digito = 10 - $resto;
         if ($resto == 0) {
             $digito = 0;

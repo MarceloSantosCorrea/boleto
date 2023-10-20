@@ -4,11 +4,10 @@ namespace Boleto\Util;
 
 class Data
 {
-
-    public static function _dateToDays($year, $month, $day)
+    public static function _dateToDays($year, $month, $day): float|int
     {
         $century = substr($year, 0, 2);
-        $year    = substr($year, 2, 2);
+        $year = substr($year, 2, 2);
         if ($month > 2) {
             $month -= 3;
         } else {

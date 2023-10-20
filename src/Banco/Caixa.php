@@ -2,8 +2,8 @@
 
 namespace Boleto\Banco;
 
-use Boleto\Boleto;
 use Boleto\Banco;
+use Boleto\Boleto;
 use Boleto\Util\Modulo;
 
 class Caixa extends Banco
@@ -107,7 +107,6 @@ class Caixa extends Banco
             substr($this->getNossoNumeroSemDigitoVerificador($boleto), 5, 3) .
             $this->getTipoImpressao() .
             substr($this->getNossoNumeroSemDigitoVerificador($boleto), 8, 9);
-
     }
 
     /**

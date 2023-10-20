@@ -6,213 +6,129 @@ use Boleto\Util\Numero;
 
 class Cedente
 {
-    /**
-     * @var string Nome
-     */
-    private $nome;
+    private string $nome;
+    private string $cpfCnpj;
+    private string $endereco;
+    private string $cidade;
+    private string $uf;
+    private string $agencia;
+    private string $dvAgencia;
+    private string $conta;
+    private string $dvConta;
 
-    /**
-     * @var string Cpf/Cnpj
-     */
-    private $cpfCnpj;
-
-    /**
-     * @var string Endereço
-     */
-    private $endereco;
-
-    /**
-     * @var string Cidade
-     */
-    private $cidade;
-
-    /**
-     * @var string UF
-     */
-    private $uf;
-
-    /**
-     * @var string Agência
-     */
-    private $agencia;
-
-    /**
-     * @var string Dígito Verificador Agência
-     */
-    private $dvAgencia;
-
-    /**
-     * @var string
-     */
-    private $conta;
-
-    /**
-     * @var string Dígito Verificador Conta
-     */
-    private $dvConta;
-
-    /**
-     * @param string $agencia
-     */
-    public function setAgencia($agencia)
-    {
-        $this->agencia = $agencia;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAgencia()
-    {
-        return $this->agencia;
-    }
-
-    /**
-     * @param string $cidade
-     */
-    public function setCidade($cidade)
-    {
-        $this->cidade = $cidade;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCidade()
-    {
-        return $this->cidade;
-    }
-
-    /**
-     * @param string $conta
-     */
-    public function setConta($conta)
-    {
-        $this->conta = $conta;
-    }
-
-    /**
-     * @return string
-     */
-    public function getConta()
-    {
-        return $this->conta;
-    }
-
-    /**
-     * @param string $cpfCnpj
-     */
-    public function setCpfCnpj($cpfCnpj)
-    {
-        $this->cpfCnpj = $cpfCnpj;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCpfCnpj()
-    {
-        return $this->cpfCnpj;
-    }
-
-    /**
-     * @param string $dvAgencia
-     */
-    public function setDvAgencia($dvAgencia)
-    {
-        $this->dvAgencia = $dvAgencia;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDvAgencia()
-    {
-        return $this->dvAgencia;
-    }
-
-    /**
-     * @param string $dvConta
-     */
-    public function setDvConta($dvConta)
-    {
-        $this->dvConta = $dvConta;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDvConta()
-    {
-        return $this->dvConta;
-    }
-
-    /**
-     * @param string $endereco
-     */
-    public function setEndereco($endereco)
-    {
-        $this->endereco = $endereco;
-    }
-
-    /**
-     * @return string
-     */
-    public function getEndereco()
-    {
-        return $this->endereco;
-    }
-
-    /**
-     * @param string $nome
-     */
-    public function setNome($nome)
-    {
-        $this->nome = $nome;
-    }
-
-    /**
-     * @return string
-     */
-    public function getNome()
+    public function getNome(): string
     {
         return $this->nome;
     }
 
-    /**
-     * @param string $uf
-     */
-    public function setUf($uf)
+    public function setNome(string $nome): Cedente
     {
-        $this->uf = $uf;
+        $this->nome = $nome;
+
+        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getUf()
+    public function getCpfCnpj(): string
+    {
+        return $this->cpfCnpj;
+    }
+
+    public function setCpfCnpj(string $cpfCnpj): Cedente
+    {
+        $this->cpfCnpj = $cpfCnpj;
+
+        return $this;
+    }
+
+    public function getEndereco(): string
+    {
+        return $this->endereco;
+    }
+
+    public function setEndereco(string $endereco): Cedente
+    {
+        $this->endereco = $endereco;
+
+        return $this;
+    }
+
+    public function getCidade(): string
+    {
+        return $this->cidade;
+    }
+
+    public function setCidade(string $cidade): Cedente
+    {
+        $this->cidade = $cidade;
+
+        return $this;
+    }
+
+    public function getUf(): string
     {
         return $this->uf;
     }
 
-    /**
-     * @return string Agência com Dv
-     */
-    public function getAgenciaComDv()
+    public function setUf(string $uf): Cedente
     {
-        return $this->agencia . "-" . $this->dvAgencia;
+        $this->uf = $uf;
+
+        return $this;
     }
 
-    /**
-     * @return string Conta com Dv
-     */
-    public function getContaComDv()
+    public function getAgencia(): string
     {
-        //$conta = Numero::formataNumero($this->getConta(), 7, 0);
+        return $this->agencia;
+    }
+
+    public function setAgencia(string $agencia): Cedente
+    {
+        $this->agencia = $agencia;
+
+        return $this;
+    }
+
+    public function getDvAgencia(): string
+    {
+        return $this->dvAgencia;
+    }
+
+    public function setDvAgencia(string $dvAgencia): Cedente
+    {
+        $this->dvAgencia = $dvAgencia;
+
+        return $this;
+    }
+
+    public function getConta(): string
+    {
+        return $this->conta;
+    }
+
+    public function setConta(string $conta): Cedente
+    {
+        $this->conta = $conta;
+
+        return $this;
+    }
+
+    public function getDvConta(): string
+    {
+        return $this->dvConta;
+    }
+
+    public function setDvConta(string $dvConta): Cedente
+    {
+        $this->dvConta = $dvConta;
+
+        return $this;
+    }
+
+    public function getContaComDv(): string
+    {
         $conta = $this->getConta();
-        $dv    = Numero::formataNumero($this->dvConta, 1, 0);
+        $dv = Numero::formataNumero($this->getDvConta(), 1, 0);
 
-        return $conta . "-" . $dv;
+        return "{$conta}-{$dv}";
     }
-
 }

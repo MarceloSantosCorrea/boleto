@@ -2,8 +2,8 @@
 
 namespace Boleto;
 
-use Boleto\Util\Modulo;
 use Boleto\Util\Data;
+use Boleto\Util\Modulo;
 use Boleto\Util\Numero;
 
 class Boleto
@@ -54,10 +54,7 @@ class Boleto
      */
     private $numeroMoeda;
 
-    /**
-     * @param int $numeroMoeda
-     */
-    public function setNumeroMoeda($numeroMoeda)
+    public function setNumeroMoeda(int $numeroMoeda): void
     {
         $this->numeroMoeda = $numeroMoeda;
     }
@@ -205,7 +202,7 @@ class Boleto
     /**
      * @param mixed $nossoNumero
      */
-    public function setNossoNumero($nossoNumero)
+    public function setNossoNumero(mixed $nossoNumero): void
     {
         $this->nossoNumero = $nossoNumero;
     }
@@ -269,7 +266,7 @@ class Boleto
     /**
      * @param float $valorBoleto
      */
-    public function setValorBoleto($valorBoleto)
+    public function setValorBoleto($valorBoleto): void
     {
         $this->valorBoleto = $valorBoleto;
     }
@@ -288,17 +285,17 @@ class Boleto
     public function getValorBoletoSemVirgula()
     {
         //valor tem 10 digitos, sem virgula
-        return Numero::formataNumero($this->valorBoleto, 10, 0, "valor");
+        return Numero::formataNumero($this->valorBoleto, 10, 0, 'valor');
     }
 
     public function getFatorVencimento()
     {
-        $data = explode("/", $this->getDataVencimento()->format('d/m/Y'));
-        $ano  = $data[2];
-        $mes  = $data[1];
-        $dia  = $data[0];
+        $data = explode('/', $this->getDataVencimento()->format('d/m/Y'));
+        $ano = $data[2];
+        $mes = $data[1];
+        $dia = $data[0];
 
-        return (abs((Data::_dateToDays("1997", "10", "07")) - (Data::_dateToDays($ano, $mes, $dia))));
+        return (abs((Data::_dateToDays('1997', '10', '07')) - (Data::_dateToDays($ano, $mes, $dia))));
     }
 
     /**
@@ -326,9 +323,21 @@ class Boleto
         return $this->getBanco()->getLinha($this);
     }
 
+    public function getNumeroFebraban(): string
+    {
+        return
+            Numero::formataNumero($this->getBanco()->getCodigo(), 3, 0) .
+            $this->getNumeroMoeda() .
+            $this->getDigitoVerificadorCodigoBarras() .
+            $this->getFatorVencimento() .
+            $this->getValorBoletoSemVirgula() .
+            $this->getCampoLivre();
+    }
+
     public function gerarLinhaDigitavel()
     {
         $codigo = $this->getLinha();
+
         // Posição 	Conteúdo
         // 1 a 3    Número do banco
         // 4        Código da Moeda - 9 para Real
@@ -339,30 +348,31 @@ class Boleto
 
         // 1. Campo - composto pelo código do banco, código da moéda, as cinco primeiras posições
         // do campo livre e DV (modulo10) deste campo
-        $p1     = substr($codigo, 0, 4);
-        $p2     = substr($codigo, 19, 5);
-        $p3     = Modulo::modulo10("$p1$p2");
-        $p4     = "$p1$p2$p3";
-        $p5     = substr($p4, 0, 5);
-        $p6     = substr($p4, 5);
+        $p1 = substr($codigo, 0, 4);
+        $p2 = substr($codigo, 19, 5);
+        $p3 = Modulo::modulo10("$p1$p2");
+        $p4 = "$p1$p2$p3";
+        $p5 = substr($p4, 0, 5);
+        $p6 = substr($p4, 5);
         $campo1 = "$p5.$p6";
+
 
         // 2. Campo - composto pelas posiçoes 6 a 15 do campo livre
         // e livre e DV (modulo10) deste campo
-        $p1     = substr($codigo, 24, 10);
-        $p2     = Modulo::modulo10($p1);
-        $p3     = "$p1$p2";
-        $p4     = substr($p3, 0, 5);
-        $p5     = substr($p3, 5);
+        $p1 = substr($codigo, 24, 10);
+        $p2 = Modulo::modulo10($p1);
+        $p3 = "$p1$p2";
+        $p4 = substr($p3, 0, 5);
+        $p5 = substr($p3, 5);
         $campo2 = "$p4.$p5";
 
         // 3. Campo composto pelas posicoes 16 a 25 do campo livre
         // e livre e DV (modulo10) deste campo
-        $p1     = substr($codigo, 34, 10);
-        $p2     = Modulo::modulo10($p1);
-        $p3     = "$p1$p2";
-        $p4     = substr($p3, 0, 5);
-        $p5     = substr($p3, 5);
+        $p1 = substr($codigo, 34, 10);
+        $p2 = Modulo::modulo10($p1);
+        $p3 = "$p1$p2";
+        $p4 = substr($p3, 0, 5);
+        $p5 = substr($p3, 5);
         $campo3 = "$p4.$p5";
 
         // 4. Campo - digito verificador do codigo de barras
@@ -371,8 +381,8 @@ class Boleto
         // 5. Campo composto pelo fator vencimento e valor nominal do documento, sem
         // indicacao de zeros a esquerda e sem edicao (sem ponto e virgula). Quando se
         // tratar de valor zerado, a representacao deve ser 000 (tres zeros).
-        $p1     = substr($codigo, 5, 4);
-        $p2     = substr($codigo, 9, 10);
+        $p1 = substr($codigo, 5, 4);
+        $p2 = substr($codigo, 9, 10);
         $campo5 = "$p1$p2";
 
         return "$campo1 $campo2 $campo3 $campo4 $campo5";
@@ -400,5 +410,13 @@ class Boleto
     public function getCarteiraENossoNumeroComDigitoVerificador()
     {
         return $this->getBanco()->getCarteiraENossoNumeroComDigitoVerificador($this);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCampoLivre()
+    {
+        return $this->getBanco()->getCampoLivre($this);
     }
 }

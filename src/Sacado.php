@@ -4,192 +4,121 @@ namespace Boleto;
 
 class Sacado
 {
-    /**
-     * @var string
-     */
-    private $nome;
+    private string $nome;
+    private string $cpfCnpj;
+    private string $cep;
+    private string $tipoLogradouro;
+    private string $enderecoLogradouro;
+    private string $numeroLogradouro;
+    private string $bairro;
+    private string $cidade;
+    private string $uf;
 
-    /**
-     * @var string Tipo Logradouro
-     */
-    private $tipoLogradouro;
-
-    /**
-     * @var string Endereço
-     */
-    private $enderecoLogradouro;
-
-    /**
-     * @var string Número
-     */
-    private $numeroLogradouro;
-
-    /**
-     * @var string Cidade
-     */
-    private $cidade;
-
-    /**
-     * @var string UF
-     */
-    private $uf;
-
-    /**
-     * @var string Cep
-     */
-    private $cep;
-
-    /**
-     * @var string CpfCnpj
-     */
-    private $cpfCnpj;
-
-    /**
-     * @var string Bairro
-     */
-    private $bairro;
-
-    /**
-     * @return string
-     */
-    public function getNome()
+    public function getNome(): string
     {
         return $this->nome;
     }
 
-    /**
-     * @param string $nome
-     */
-    public function setNome($nome)
+    public function setNome(string $nome): Sacado
     {
         $this->nome = $nome;
+
+        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getTipoLogradouro()
-    {
-        return $this->tipoLogradouro;
-    }
-
-    /**
-     * @param string $tipoLogradouro
-     */
-    public function setTipoLogradouro($tipoLogradouro)
-    {
-        $this->tipoLogradouro = $tipoLogradouro;
-    }
-
-    /**
-     * @return string
-     */
-    public function getEnderecoLogradouro()
-    {
-        return $this->enderecoLogradouro;
-    }
-
-    /**
-     * @param string $enderecoLogradouro
-     */
-    public function setEnderecoLogradouro($enderecoLogradouro)
-    {
-        $this->enderecoLogradouro = $enderecoLogradouro;
-    }
-
-    /**
-     * @return string
-     */
-    public function getNumeroLogradouro()
-    {
-        return $this->numeroLogradouro;
-    }
-
-    /**
-     * @param string $numeroLogradouro
-     */
-    public function setNumeroLogradouro($numeroLogradouro)
-    {
-        $this->numeroLogradouro = $numeroLogradouro;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCidade()
-    {
-        return $this->cidade;
-    }
-
-    /**
-     * @param string $cidade
-     */
-    public function setCidade($cidade)
-    {
-        $this->cidade = $cidade;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUf()
-    {
-        return $this->uf;
-    }
-
-    /**
-     * @param string $uf
-     */
-    public function setUf($uf)
-    {
-        $this->uf = $uf;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCep()
-    {
-        return $this->cep;
-    }
-
-    /**
-     * @param string $cep
-     */
-    public function setCep($cep)
-    {
-        $this->cep = $cep;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCpfCnpj()
+    public function getCpfCnpj(): string
     {
         return $this->cpfCnpj;
     }
 
-    /**
-     * @param string $cpfCnpj
-     */
-    public function setCpfCnpj($cpfCnpj)
+    public function setCpfCnpj(string $cpfCnpj): Sacado
     {
         $this->cpfCnpj = $cpfCnpj;
+
+        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getBairro()
+    public function getCep(): string
+    {
+        return $this->cep;
+    }
+
+    public function setCep(string $cep): Sacado
+    {
+        $this->cep = $cep;
+
+        return $this;
+    }
+
+    public function getTipoLogradouro(): string
+    {
+        return $this->tipoLogradouro;
+    }
+
+    public function setTipoLogradouro(string $tipoLogradouro): Sacado
+    {
+        $this->tipoLogradouro = $tipoLogradouro;
+
+        return $this;
+    }
+
+    public function getEnderecoLogradouro(): string
+    {
+        return $this->enderecoLogradouro;
+    }
+
+    public function setEnderecoLogradouro(string $enderecoLogradouro): Sacado
+    {
+        $this->enderecoLogradouro = $enderecoLogradouro;
+
+        return $this;
+    }
+
+    public function getNumeroLogradouro(): string
+    {
+        return $this->numeroLogradouro;
+    }
+
+    public function setNumeroLogradouro(string $numeroLogradouro): Sacado
+    {
+        $this->numeroLogradouro = $numeroLogradouro;
+
+        return $this;
+    }
+
+    public function getBairro(): string
     {
         return $this->bairro;
     }
 
-    /**
-     * @param string $bairro
-     */
-    public function setBairro($bairro)
+    public function setBairro(string $bairro): Sacado
     {
         $this->bairro = $bairro;
+
+        return $this;
+    }
+
+    public function getCidade(): string
+    {
+        return $this->cidade;
+    }
+
+    public function setCidade(string $cidade): Sacado
+    {
+        $this->cidade = $cidade;
+
+        return $this;
+    }
+
+    public function getUf(): string
+    {
+        return $this->uf;
+    }
+
+    public function setUf(string $uf): Sacado
+    {
+        $this->uf = $uf;
+
+        return $this;
     }
 }

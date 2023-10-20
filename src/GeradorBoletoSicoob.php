@@ -6,7 +6,7 @@ use Boleto\Util\Substr;
 use Boleto\Util\UnidadeMedida;
 use FPDF;
 
-class GeradorBoleto
+class GeradorBoletoSicoob
 {
     public function gerar(Boleto $boleto)
     {
@@ -56,10 +56,10 @@ class GeradorBoleto
 
         $PDF->SetFont('Arial', '', 6);
         $PDF->Cell(85, 3, 'Cedente', 'LR', 0, 'L');
-        $PDF->Cell(30, 3, utf8_decode('Agência/Código do Cedente'), 'R', 0, 'L');
+        $PDF->Cell(30, 3, utf8_decode('Agência/Código Beneficiário'), 'R', 0, 'L');
         $PDF->Cell(15, 3, utf8_decode('Espécie'), 'R', 0, 'L');
         $PDF->Cell(20, 3, 'Quantidade', 'R', 0, 'L');
-        $PDF->Cell(40, 3, utf8_decode('Carteira/Nosso número'), 'R', 1, 'L');
+        $PDF->Cell(40, 3, utf8_decode('Nosso número'), 'R', 1, 'L');
 
         $PDF->SetFont('Arial', '', 7);
         $PDF->SetTextColor(0, 0, 51);
@@ -152,7 +152,7 @@ class GeradorBoleto
 
         $PDF->SetFont('Arial', '', 6);
         $PDF->Cell(130, 3, 'Cedente', 'LR', 0, 'L');
-        $PDF->Cell(60, 3, utf8_decode('Agência/Código cedente'), 'R', 1, 'L');
+        $PDF->Cell(60, 3, utf8_decode('Agência/Código Beneficiário'), 'R', 1, 'L');
 
         $PDF->SetFont('Arial', '', 7);
         $PDF->Cell(130, 5, utf8_decode($boleto->getCedente()->getNome()), 'BLR', 0, 'L');
@@ -167,7 +167,7 @@ class GeradorBoleto
         $PDF->Cell(20, 3, utf8_decode('Espécie doc.'), 'R', 0, 'L');
         $PDF->Cell(20, 3, 'Aceite', 'R', 0, 'L');
         $PDF->Cell(22, 3, 'Data processamento', '', 0, 'L');
-        $PDF->Cell(60, 3, utf8_decode('Carteira / Nosso número'), 'LR', 1, 'L');
+        $PDF->Cell(60, 3, utf8_decode('Nosso número'), 'LR', 1, 'L');
 
         $PDF->SetFont('Arial', '', 7);
         $PDF->Cell(28, 5, $boleto->getDataDocumento()->format('d/m/Y'), 'BLR', 0, 'L');
@@ -187,7 +187,7 @@ class GeradorBoleto
 
         $PDF->SetFont('Arial', '', 7);
         $PDF->Cell(28, 5, '', 'BLR', 0, 'L');
-        $PDF->Cell(25, 5, (string)$boleto->getBanco()->getCarteira(), 'BR', 0, 'L');
+        $PDF->Cell(25, 5, $boleto->getBanco()->getCarteira(), 'BR', 0, 'L');
         $PDF->Cell(15, 5, $boleto->getBanco()->getEspecie(), 'BR', 0, 'L');
         $PDF->Cell(40, 5, "001", 'BR', 0, 'L');
         $PDF->Cell(22, 5, '', 'BR', 0, 'L');
@@ -258,7 +258,7 @@ class GeradorBoleto
         $PDF->Cell(170, 3, 'Sacador/Avalista', '', 0, 'L');
         $PDF->Cell(20, 3, utf8_decode('Autênticação Mecânica - Ficha de Compensação'), '', 1, 'R');
 
-        $this->fbarcode($boleto->getLinha(), $PDF);
+        $this->fbarcode($boleto->getNumeroFebraban(), $PDF);
 
         $PDF->Ln(10);
         $PDF->SetY(260);
@@ -275,8 +275,8 @@ class GeradorBoleto
 
     public function fbarcode($valor, FPDF $PDF)
     {
-        $fino = UnidadeMedida::px2milimetros(1); // valores em px
-        $largo = UnidadeMedida::px2milimetros(2.3); // valor em px
+        $fino   = UnidadeMedida::px2milimetros(1); // valores em px
+        $largo  = UnidadeMedida::px2milimetros(2.3); // valor em px
         $altura = UnidadeMedida::px2milimetros(40); // valor em px
 
         $barcodes[0] = "00110";
@@ -291,7 +291,7 @@ class GeradorBoleto
         $barcodes[9] = "01010";
         for ($f1 = 9; $f1 >= 0; $f1--) {
             for ($f2 = 9; $f2 >= 0; $f2--) {
-                $f = ($f1 * 10) + $f2;
+                $f     = ($f1 * 10) + $f2;
                 $texto = "";
                 for ($i = 1; $i < 6; $i++) {
                     $texto .= substr($barcodes[$f1], ($i - 1), 1) . substr($barcodes[$f2], ($i - 1), 1);
@@ -315,9 +315,9 @@ class GeradorBoleto
         }
 
         while (strlen($texto) > 0) {
-            $i = round(Substr::esquerda($texto, 2));
+            $i     = round(Substr::esquerda($texto, 2));
             $texto = Substr::direita($texto, strlen($texto) - 2);
-            $f = $barcodes[$i];
+            $f     = $barcodes[$i];
             for ($i = 1; $i < 11; $i += 2) {
                 if (substr($f, ($i - 1), 1) == "0") {
                     $f1 = $fino;

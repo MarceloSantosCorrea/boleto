@@ -26,11 +26,8 @@ class Bradesco extends Banco
      */
     public function getNossoNumeroComDigitoVerificador(Boleto $boleto)
     {
-        $nnum = Numero::formataNumero($this->getCarteira(), 2, 0) . Numero::formataNumero(
-                $boleto->getNossoNumero(),
-                11,
-                0
-            );
+        $nnum = Numero::formataNumero($this->getCarteira(), 2, 0) .
+            Numero::formataNumero($boleto->getNossoNumero(), 11, 0);
 
         //dv do nosso número
         return $boleto->digitoVerificadorNossonumero($nnum);

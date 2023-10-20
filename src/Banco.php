@@ -6,7 +6,6 @@ use Boleto\Util\Modulo;
 
 abstract class Banco
 {
-
     /**
      * @var int Código do Banco
      */
@@ -73,10 +72,7 @@ abstract class Banco
 
     protected abstract function init();
 
-    /**
-     * @return int Código
-     */
-    public function getCodigo()
+    public function getCodigo(): int
     {
         return $this->codigo;
     }
@@ -177,18 +173,12 @@ abstract class Banco
         return $this->carteira;
     }
 
-    /**
-     * @param string $carteira
-     */
-    public function setCarteira($carteira)
+    public function setCarteira(int $carteira): void
     {
         $this->carteira = $carteira;
     }
 
-    /**
-     * @return int
-     */
-    public function getCarteiraModalidade()
+    public function getCarteiraModalidade(): int
     {
         return $this->carteiraModalidade;
     }
@@ -196,7 +186,7 @@ abstract class Banco
     /**
      * @param int $carteiraModalidade
      */
-    public function setCarteiraModalidade($carteiraModalidade)
+    public function setCarteiraModalidade(int $carteiraModalidade): void
     {
         $this->carteiraModalidade = $carteiraModalidade;
     }
@@ -320,4 +310,10 @@ abstract class Banco
      * @return mixed
      */
     abstract function getLinha(Boleto $boleto);
+
+    /**
+     * @param Boleto $boleto
+     * @return mixed
+     */
+    abstract function getCampoLivre(Boleto $boleto);
 }
