@@ -189,16 +189,16 @@ test('deve retornar o nosso número com dígito verificador formatado para o bol
     [10, '0000010-6']
 ]);
 
-test('deve retornar a linha com os dados para a geração dos dados da linha digitável para o boleto', function (int $sequencialNossoNumero, string $result) {
+test('deve retornar a linha com os dados para a geração dos dados da linha digitável para o boleto', function (array $dados, string $result) {
     $oBoleto = new \Boleto\Boleto();
     $banco = new \Boleto\Banco\Sicoob();
     $banco->setCarteira('1');
     $banco->setCarteiraModalidade(1);
     $oBoleto->setBanco($banco);
     $oBoleto->setNumeroMoeda(9);
-    $oBoleto->setDataVencimento(DateTime::createFromFormat('d/m/Y', '10/10/2023'));
-    $oBoleto->setValorBoleto('3,00');
-    $oBoleto->setNossoNumero($sequencialNossoNumero);
+    $oBoleto->setDataVencimento(DateTime::createFromFormat('d/m/Y', $dados['data_vencimento']));
+    $oBoleto->setValorBoleto($dados['valor']);
+    $oBoleto->setNossoNumero($dados['nosso_numero']);
 
     $oCedente = new \Boleto\Cedente();
     $oCedente->setAgencia('4342');
@@ -211,7 +211,21 @@ test('deve retornar a linha com os dados para a geração dos dados da linha dig
     $response = $banco->getLinha($oBoleto);
     expect($response)->toEqual($result);
 })->with([
-    [2, '75693949900000003001434201243394000000027001'],
+    [
+        [
+            'nosso_numero' => 2,
+            'data_vencimento' => '10/10/2023',
+            'valor' => '3,00',
+        ], '75693949900000003001434201243394000000027001'
+    ],
+    [
+        [
+            'nosso_numero' => 2252,
+            'data_vencimento' => '10/04/2024',
+            'valor' => '191,24',
+        ], '75691968200000191241434201243394000022527001'
+
+    ],
 ]);
 
 test('deve retornar o dígito verificador geral', function (int $sequencialNossoNumero, int $result) {

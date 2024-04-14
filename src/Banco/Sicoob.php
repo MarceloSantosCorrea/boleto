@@ -75,31 +75,11 @@ class Sicoob extends Banco
         );
     }
 
-    public function calcularDigitoVerificadorModulo11($codigoBarras)
+    public function calcularDigitoVerificadorModulo11($codigoBarras): int
     {
-        $codigoBarras = strrev($codigoBarras); // Inverte a string para facilitar o cálculo.
-        $soma = 0;
-        $peso = 2;
-
-        for ($i = 0; $i < strlen($codigoBarras); $i++) {
-            $digito = (int)$codigoBarras[$i];
-            $soma += $digito * $peso;
-
-            if ($peso < 9) {
-                $peso++;
-            } else {
-                $peso = 2;
-            }
-        }
-
-        $resto = $soma % 11;
-        $digitoVerificador = 11 - $resto;
-
-        if ($digitoVerificador == 0 || $digitoVerificador == 1) {
-            $digitoVerificador = 1; // Se o resultado for 0 ou 1, o dígito verificador é 1.
-        }
-
-        return $digitoVerificador;
+        return $this->tratarRestoDigitoVerificadorGeral(
+            Modulo::modulo11($codigoBarras, 9, 1)
+        );
     }
 
     /**

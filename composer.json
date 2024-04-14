@@ -28,7 +28,8 @@
     }
   },
   "require-dev": {
-    "pestphp/pest": "^2.21"
+    "pestphp/pest": "^2.21",
+    "symfony/var-dumper": "^7.0"
   },
   "autoload-dev": {
     "psr-4": {
