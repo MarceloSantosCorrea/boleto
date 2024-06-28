@@ -5,290 +5,171 @@ namespace Boleto;
 use Boleto\Util\Data;
 use Boleto\Util\Modulo;
 use Boleto\Util\Numero;
+use DateTime;
 
 class Boleto
 {
-    /**
-     * @var Banco
-     */
-    private $banco;
+    private Banco $banco;
+    private Cedente $cedente;
+    private Sacado $sacado;
+    private Avalista $avalista;
+    private string $nossoNumero;
+    private string $numeroDocumento;
+    private DateTime $dataVencimento;
+    private DateTime $dataDocumento;
+    private DateTime $dataProcessamento;
+    private string $valorBoleto;
+    private int $numeroMoeda;
+    private array $demonstrativos = [];
+    private array $instrucoes = [];
 
-    /**
-     * @var Cedente
-     */
-    private $cedente;
-    /**
-     * @var Sacado
-     */
-    private $sacado;
-    /**
-     * @var Avalista
-     */
-    private $avalista;
-    /**
-     * @var string
-     */
-    private $nossoNumero;
-    /**
-     * @var string
-     */
-    private $numeroDocumento;
-    /**
-     * @var DateTime
-     */
-    private $dataVencimento;
-    /**
-     * @var DateTime
-     */
-    private $dataDocumento;
-    /**
-     * @var DateTime
-     */
-    private $dataProcessamento;
-    /**
-     * @var float
-     */
-    private $valorBoleto;
-    /**
-     * @var int
-     */
-    private $numeroMoeda;
+    public function setBanco(Banco $banco): void
+    {
+        $this->banco = $banco;
+    }
+
+    public function getBanco(): Banco
+    {
+        return $this->banco;
+    }
 
     public function setNumeroMoeda(int $numeroMoeda): void
     {
         $this->numeroMoeda = $numeroMoeda;
     }
 
-    /**
-     * @return int
-     */
-    public function getNumeroMoeda()
+    public function getNumeroMoeda(): int
     {
         return $this->numeroMoeda;
     }
 
-    /**
-     * @var array
-     */
-    private $demonstrativos = [];
-
-    /**
-     * @var array
-     */
-    private $instrucoes = [];
-
-    /**
-     * @param Banco $banco
-     */
-    public function setBanco(Banco $banco)
-    {
-        $this->banco = $banco;
-    }
-
-    /**
-     * @return Banco
-     */
-    public function getBanco()
-    {
-        return $this->banco;
-    }
-
-    /**
-     * @param \DateTime $dataDocumento
-     */
-    public function setDataDocumento(\DateTime $dataDocumento)
+    public function setDataDocumento(DateTime $dataDocumento): void
     {
         $this->dataDocumento = $dataDocumento;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getDataDocumento()
+    public function getDataDocumento(): DateTime
     {
         return $this->dataDocumento;
     }
 
-    /**
-     * @param \DateTime $dataProcessamento
-     */
-    public function setDataProcessamento(\DateTime $dataProcessamento)
+    public function setDataProcessamento(DateTime $dataProcessamento): void
     {
         $this->dataProcessamento = $dataProcessamento;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getDataProcessamento()
+    public function getDataProcessamento(): DateTime
     {
         return $this->dataProcessamento;
     }
 
-    /**
-     * @param \DateTime $dataVencimento
-     */
-    public function setDataVencimento(\DateTime $dataVencimento)
+    public function setDataVencimento(DateTime $dataVencimento): void
     {
         $this->dataVencimento = $dataVencimento;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getDataVencimento()
+    public function getDataVencimento(): DateTime
     {
         return $this->dataVencimento;
     }
 
-    /**
-     * @param array $demonstrativos
-     */
-    public function setDemonstrativos($demonstrativos)
+    public function setDemonstrativos($demonstrativos): void
     {
         $this->demonstrativos = $demonstrativos;
     }
 
-    public function addDemostrativo($demonstrativo)
+    public function addDemostrativo(string $demonstrativo): void
     {
         $this->demonstrativos[] = $demonstrativo;
     }
 
-    /**
-     * @return array
-     */
-    public function getDemonstrativos()
+    public function getDemonstrativos(): array
     {
         return $this->demonstrativos;
     }
 
-    /**
-     * @param Cedente $cedente
-     */
-    public function setCedente($cedente)
+    public function setCedente(Cedente $cedente): void
     {
         $this->cedente = $cedente;
     }
 
-    /**
-     * @return Cedente
-     */
-    public function getCedente()
+    public function getCedente(): Cedente
     {
         return $this->cedente;
     }
 
-    /**
-     * @param array $instrucoes
-     */
-    public function setInstrucoes($instrucoes)
+    public function setInstrucoes(array $instrucoes): void
     {
         $this->instrucoes = $instrucoes;
     }
 
-    public function addInstrucao($instrucao)
+    public function addInstrucao(string $instrucao): void
     {
         $this->instrucoes[] = $instrucao;
     }
 
-    /**
-     * @return array
-     */
-    public function getInstrucoes()
+    public function getInstrucoes(): array
     {
         return $this->instrucoes;
     }
 
-    /**
-     * @param mixed $nossoNumero
-     */
-    public function setNossoNumero(mixed $nossoNumero): void
+    public function setNossoNumero(string $nossoNumero): void
     {
         $this->nossoNumero = $nossoNumero;
     }
 
-    /**
-     * @return string
-     */
-    public function getNossoNumero()
+    public function getNossoNumero(): string
     {
         return $this->nossoNumero;
     }
 
-    /**
-     * @param mixed $numeroDocumento
-     */
-    public function setNumeroDocumento($numeroDocumento)
+    public function setNumeroDocumento(string $numeroDocumento): void
     {
         $this->numeroDocumento = $numeroDocumento;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getNumeroDocumento()
+    public function getNumeroDocumento(): string
     {
         return $this->numeroDocumento;
     }
 
-    /**
-     * @param Sacado $sacado
-     */
-    public function setSacado($sacado)
+    public function setSacado(Sacado $sacado): void
     {
         $this->sacado = $sacado;
     }
 
-    /**
-     * @return Sacado
-     */
-    public function getSacado()
+    public function getSacado(): Sacado
     {
         return $this->sacado;
     }
 
-    /**
-     * @param Avalista $avalista
-     */
-    public function setAvalista($avalista)
+    public function setAvalista(Avalista $avalista): void
     {
         $this->avalista = $avalista;
     }
 
-    /**
-     * @return Avalista
-     */
-    public function getAvalista()
+    public function getAvalista(): Avalista
     {
         return $this->avalista;
     }
 
-    /**
-     * @param float $valorBoleto
-     */
-    public function setValorBoleto($valorBoleto): void
+    public function setValorBoleto(string $valorBoleto): void
     {
         $this->valorBoleto = $valorBoleto;
     }
 
-    /**
-     * @return float
-     */
-    public function getValorBoleto()
+    public function getValorBoleto(): string
     {
         return $this->valorBoleto;
     }
 
-    /**
-     * @return int
-     */
-    public function getValorBoletoSemVirgula()
+    public function getValorBoletoSemVirgula(): string
     {
         //valor tem 10 digitos, sem virgula
         return Numero::formataNumero($this->valorBoleto, 10, 0, 'valor');
     }
 
-    public function getFatorVencimento()
+    public function getFatorVencimento(): float|int
     {
         $data = explode('/', $this->getDataVencimento()->format('d/m/Y'));
         $ano = $data[2];
@@ -298,27 +179,17 @@ class Boleto
         return (abs((Data::_dateToDays('1997', '10', '07')) - (Data::_dateToDays($ano, $mes, $dia))));
     }
 
-    /**
-     * @return string
-     */
-    public function getDigitoVerificadorCodigoBarras()
+    public function getDigitoVerificadorCodigoBarras(): int
     {
         return $this->getBanco()->getDigitoVerificadorCodigoBarras($this);
     }
 
-    /**
-     * @param $numero
-     * @return mixed
-     */
-    public function digitoVerificadorNossonumero($numero)
+    public function digitoVerificadorNossoNumero($numero): int
     {
-        return $this->getBanco()->digitoVerificadorNossonumero($numero);
+        return $this->getBanco()->digitoVerificadorNossoNumero($numero);
     }
 
-    /**
-     * @return string
-     */
-    public function getLinha()
+    public function getLinha(): string
     {
         return $this->getBanco()->getLinha($this);
     }
@@ -334,7 +205,7 @@ class Boleto
             $this->getCampoLivre();
     }
 
-    public function gerarLinhaDigitavel()
+    public function gerarLinhaDigitavel(): string
     {
         $codigo = $this->getLinha();
 
@@ -388,35 +259,28 @@ class Boleto
         return "$campo1 $campo2 $campo3 $campo4 $campo5";
     }
 
-    /**
-     * @return mixed
-     */
-    public function getNossoNumeroSemDigitoVerificador()
+    public function getNossoNumeroSemDigitoVerificador(): string
     {
         return $this->getBanco()->getNossoNumeroSemDigitoVerificador($this);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getNossoNumeroComDigitoVerificador()
+    public function getNossoNumeroComDigitoVerificador(): int|string
     {
         return $this->getBanco()->getNossoNumeroComDigitoVerificador($this);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getCarteiraENossoNumeroComDigitoVerificador()
+    public function getCarteiraENossoNumeroComDigitoVerificador(): string
     {
         return $this->getBanco()->getCarteiraENossoNumeroComDigitoVerificador($this);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getCampoLivre()
+    public function getCampoLivre(): string
     {
         return $this->getBanco()->getCampoLivre($this);
+    }
+
+    public function getDigitoVerificadorNossoNumero(): int|string
+    {
+        return $this->getBanco()->getDigitoVerificadorNossoNumero($this);
     }
 }

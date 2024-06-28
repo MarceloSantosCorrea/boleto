@@ -139,7 +139,7 @@ test('deve calcular e retornar o dígito verificador do nosso número', function
 
     $oBoleto->setCedente($oCedente);
 
-    $response = $banco->digitoVerificadorNossonumero(
+    $response = $banco->digitoVerificadorNossoNumero(
         $banco->getSequenciaCalculoDigitoVerificadorNossoNumero($oBoleto)
     );
     expect($response)->toEqual($result);

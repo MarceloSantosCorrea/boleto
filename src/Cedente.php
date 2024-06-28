@@ -15,6 +15,7 @@ class Cedente
     private string $dvAgencia;
     private string $conta;
     private string $dvConta;
+    private ?string $codigoCedente = null;
 
     public function getNome(): string
     {
@@ -120,6 +121,18 @@ class Cedente
     public function setDvConta(string $dvConta): Cedente
     {
         $this->dvConta = $dvConta;
+
+        return $this;
+    }
+
+    public function getCodigoCedente(): ?string
+    {
+        return $this->codigoCedente;
+    }
+
+    public function setCodigoCedente(?string $codigoCedente): Cedente
+    {
+        $this->codigoCedente = $codigoCedente;
 
         return $this;
     }

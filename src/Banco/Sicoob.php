@@ -23,23 +23,17 @@ class Sicoob extends Banco
         $this->setLocalPagamento('Pagável em qualquer banco até o vencimento');
     }
 
-    /**
-     * @param Boleto $boleto
-     * @return int|string
-     * @throws Exception
-     */
+    /** @throws Exception */
     public function getNossoNumeroComDigitoVerificador(Boleto $boleto): int|string
     {
-        return
-            $this->getNossoNumeroSemDigitoVerificador($boleto) .
-            $this->digitoVerificadorNossonumero(
-                $this->getSequenciaCalculoDigitoVerificadorNossoNumero($boleto)
-            );
+        $digitoVerificadorNossoNumero = $this->digitoVerificadorNossoNumero(
+            $this->getSequenciaCalculoDigitoVerificadorNossoNumero($boleto)
+        );
+
+        return $this->getNossoNumeroSemDigitoVerificador($boleto) . $digitoVerificadorNossoNumero;
     }
 
-    /**
-     * @throws Exception
-     */
+    /** @throws Exception */
     public function getSequenciaCalculoDigitoVerificadorNossoNumero(Boleto $boleto): string
     {
         $agenciaFormatada = Numero::formataNumero($boleto->getCedente()->getAgencia(), 4, 0);
@@ -49,21 +43,13 @@ class Sicoob extends Banco
         return $agenciaFormatada . $contaFormatada . $this->getNossoNumeroSemDigitoVerificador($boleto);
     }
 
-    /**
-     * @param Boleto $boleto
-     * @return string
-     * @throws Exception
-     */
+    /** @throws Exception */
     public function getNossoNumeroSemDigitoVerificador(Boleto $boleto): string
     {
         return Numero::formataNumero($boleto->getNossoNumero(), 7, 0);
     }
 
-    /**
-     * @param Boleto $boleto
-     * @return int
-     * @throws Exception
-     */
+    /** @throws Exception */
     public function getDigitoVerificadorCodigoBarras(Boleto $boleto): int
     {
         return $this->calcularDigitoVerificadorModulo11(
@@ -86,7 +72,7 @@ class Sicoob extends Banco
      * @param string $numero é um sequência para cálculo em $this->getSequenciaCalculoDigitoVerificadorNossoNumero()
      * @return int
      */
-    public function digitoVerificadorNossonumero($numero): int
+    public function digitoVerificadorNossoNumero($numero): int
     {
         $cont = 0;
         $constante = 0;
@@ -119,11 +105,7 @@ class Sicoob extends Banco
         return $dv;
     }
 
-    /**
-     * @param Boleto $boleto
-     * @return string
-     * @throws Exception
-     */
+    /** @throws Exception */
     function getLinha(Boleto $boleto): string
     {
         return
@@ -135,11 +117,7 @@ class Sicoob extends Banco
             $this->getCampoLivre($boleto);
     }
 
-    /**
-     * @param Boleto $boleto
-     * @return string
-     * @throws Exception
-     */
+    /** @throws Exception */
     public function getCampoLivre(Boleto $boleto): string
     {
         return
@@ -151,11 +129,7 @@ class Sicoob extends Banco
             '001';
     }
 
-    /**
-     * @param Boleto $boleto
-     * @return int
-     * @throws Exception
-     */
+    /** @throws Exception */
     public function getDvCampoLivre(Boleto $boleto): int
     {
         $campoLivre = $this->getCampoLivre($boleto);
@@ -165,10 +139,6 @@ class Sicoob extends Banco
         );
     }
 
-    /**
-     * @param $resto
-     * @return int
-     */
     private function tratarRestoDigitoVerificadorGeral($resto): int
     {
         $resultado = 11 - $resto;
@@ -180,10 +150,6 @@ class Sicoob extends Banco
         return $resultado;
     }
 
-    /**
-     * @param int $resto
-     * @return int
-     */
     private function tratarRestoDigitoVerificadorNossoNumeroCampoLivre(int $resto): int
     {
         $resultado = 11 - $resto;
@@ -191,14 +157,18 @@ class Sicoob extends Banco
         return (9 < $resultado) ? 0 : $resultado;
     }
 
-    /**
-     * @throws Exception
-     */
+    /** @throws Exception */
     public function getCarteiraENossoNumeroComDigitoVerificador(Boleto $boleto): string
     {
-        return $this->getNossoNumeroSemDigitoVerificador($boleto) . '-' .
-            $this->digitoVerificadorNossonumero(
-                $this->getSequenciaCalculoDigitoVerificadorNossoNumero($boleto)
-            );
+        $digitoVerificadorNossoNumero = $this->digitoVerificadorNossoNumero(
+            $this->getSequenciaCalculoDigitoVerificadorNossoNumero($boleto)
+        );
+
+        return $this->getNossoNumeroSemDigitoVerificador($boleto) . '-' . $digitoVerificadorNossoNumero;
+    }
+
+    protected function getDigitoVerificadorNossoNumero(Boleto $boleto): int
+    {
+        // TODO: Implement getDigitoVerificadorNossoNumero() method.
     }
 }

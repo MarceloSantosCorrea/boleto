@@ -8,287 +8,253 @@ use FPDF;
 
 class GeradorBoleto
 {
-    public function gerar(Boleto $boleto)
+    public function gerar(Boleto $boleto): FPDF
     {
-        $PDF = new FPDF("P", 'mm', 'A4');
+        $pdf = new FPDF('P', 'mm', 'A4');
+        $pdf->SetTextColor(0, 0, 51);
+        $pdf->SetFillColor(255, 255, 255);
 
-        $PDF->SetTextColor(0, 0, 51);
-        $PDF->SetFillColor(255, 255, 255);
+        $pdf->AddPage();
+        $pdf->SetFont('Arial', '', 8);
+        $pdf->Ln();
 
-        $PDF->AddPage();
-        $PDF->SetFont('Arial', '', 8);
-        $PDF->Ln();
+        $pdf->SetFont('Arial', 'B', 6);
 
-        $PDF->SetFont('Arial', 'B', 6);
+        $pdf->Cell(190, 4, mb_convert_encoding('Instrução de Impressão:', 'ISO-8859-1', 'UTF-8'), '', 1, 'C');
+        $pdf->Cell(190, 4, mb_convert_encoding('Imprimir em impressora jato de tinta (ink jet) ou laser em qualidade normal. (Não use modo econômico).', 'ISO-8859-1', 'UTF-8'), '', 1, 'C');
+        $pdf->Cell(190, 4, mb_convert_encoding('Utilize folha A4 (210 x 297 mm) ou carta (216 x 279 mm) - Corte na linha indicada:', 'ISO-8859-1', 'UTF-8'), '', 1, 'C');
 
-        $PDF->Cell(190, 4, utf8_decode("Instrução de Impressão:"), '', 1, 'C');
-        $PDF->Cell(190, 4,
-            utf8_decode("Imprimir em impressora jato de tinta (ink jet) ou laser em qualidade normal. (Não use modo econômico)."),
-            '', 1, 'C'
-        );
-        $PDF->Cell(190, 4,
-            utf8_decode("Utilize folha A4 (210 x 297 mm) ou carta (216 x 279 mm) - Corte na linha indicada:"),
-            '', 1, 'C'
-        );
+        $pdf->Ln();
+        $pdf->SetFont('Arial', 'B', 6);
+        $pdf->Cell(190, 2, 'Recibo do Sacado', '', 1, 'R');
+        $pdf->SetFont('Arial', '', 12);
+        $pdf->Cell(190, 2, '--------------------------------------------------------------------------------------------------------------------------------------', '', 0, 'L');
 
-        $PDF->Ln();
-        $PDF->SetFont('Arial', 'B', 6);
-        $PDF->Cell(190, 2, 'Recibo do Sacado', '', 1, 'R');
-        $PDF->SetFont('Arial', '', 12);
-        $PDF->Cell(190, 2,
-            '--------------------------------------------------------------------------------------------------------------------------------------',
-            '', 0, 'L'
-        );
+        $pdf->Ln();
+        $pdf->Ln(15);
 
-        $PDF->Ln();
-        $PDF->Ln(15);
+        $pdf->SetFont('Arial', '', 9);
 
-        $PDF->SetFont('Arial', '', 9);
+        $pdf->Cell(50, 10, '', 'B', 0, 'L');
+        $pdf->Image(Gerador::getDirImages() . $boleto->getBanco()->getLogomarca(), 10, 43, 40, 10);
 
-        $PDF->Cell(50, 10, '', 'B', 0, 'L');
-        $PDF->Image(Gerador::getDirImages() . $boleto->getBanco()->getLogomarca(), 10, 43, 40, 10);
+        $pdf->SetFont('Arial', 'B', 14);
+        $pdf->Cell(20, 10, $boleto->getBanco()->getCodigoComDigitoVerificador(), 'LBR', 0, 'C');
 
-        $PDF->SetFont('Arial', 'B', 14);
-        $PDF->Cell(20, 10, $boleto->getBanco()->getCodigoComDigitoVerificador(), 'LBR', 0, 'C');
+        $pdf->SetFont('Arial', 'B', 9);
+        $pdf->Cell(120, 10, $boleto->gerarLinhaDigitavel(), 'B', 1, 'R');
 
-        $PDF->SetFont('Arial', 'B', 9);
-        $PDF->Cell(120, 10, $boleto->gerarLinhaDigitavel(), 'B', 1, 'R');
+        $pdf->SetFont('Arial', '', 6);
+        $pdf->Cell(85, 3, 'Cedente', 'LR', 0, 'L');
+        $pdf->Cell(30, 3, mb_convert_encoding('Agência/Código do Cedente', 'ISO-8859-1', 'UTF-8'), 'R', 0, 'L');
+        $pdf->Cell(15, 3, mb_convert_encoding('Espécie', 'ISO-8859-1', 'UTF-8'), 'R', 0, 'L');
+        $pdf->Cell(20, 3, 'Quantidade', 'R', 0, 'L');
+        $pdf->Cell(40, 3, mb_convert_encoding('Carteira/Nosso número', 'ISO-8859-1', 'UTF-8'), 'R', 1, 'L');
 
-        $PDF->SetFont('Arial', '', 6);
-        $PDF->Cell(85, 3, 'Cedente', 'LR', 0, 'L');
-        $PDF->Cell(30, 3, utf8_decode('Agência/Código do Cedente'), 'R', 0, 'L');
-        $PDF->Cell(15, 3, utf8_decode('Espécie'), 'R', 0, 'L');
-        $PDF->Cell(20, 3, 'Quantidade', 'R', 0, 'L');
-        $PDF->Cell(40, 3, utf8_decode('Carteira/Nosso número'), 'R', 1, 'L');
+        $pdf->SetFont('Arial', '', 7);
+        $pdf->SetTextColor(0, 0, 51);
+        $pdf->Cell(85, 5, mb_convert_encoding($boleto->getSacado()->getNome(), 'ISO-8859-1', 'UTF-8'), 'BLR', 0, 'L');
+        $pdf->Cell(30, 5, $boleto->getCedente()->getAgencia() . " / " . $boleto->getCedente()->getContaComDv(), 'BR', 0, 'L');
+        $pdf->Cell(15, 5, $boleto->getBanco()->getEspecie(), 'BR', 0, 'L');
+        $pdf->Cell(20, 5, "001", 'BR', 0, 'L');
+        $pdf->Cell(40, 5, $boleto->getCarteiraENossoNumeroComDigitoVerificador(), 'BR', 1, 'R');
 
-        $PDF->SetFont('Arial', '', 7);
-        $PDF->SetTextColor(0, 0, 51);
-        $PDF->Cell(85, 5, utf8_decode($boleto->getSacado()->getNome()), 'BLR', 0, 'L');
-        $PDF->Cell(30, 5,
-            $boleto->getCedente()->getAgencia() . " / " . $boleto->getCedente()->getContaComDv(),
-            'BR', 0, 'L'
-        );
-        $PDF->Cell(15, 5, $boleto->getBanco()->getEspecie(), 'BR', 0, 'L');
-        $PDF->Cell(20, 5, "001", 'BR', 0, 'L');
-        $PDF->Cell(40, 5, $boleto->getCarteiraENossoNumeroComDigitoVerificador(), 'BR', 1, 'R');
+        $pdf->SetFont('Arial', '', 6);
+        $pdf->Cell(60, 3, mb_convert_encoding('Número do Documento', 'ISO-8859-1', 'UTF-8'), 'LR', 0, 'L');
+        $pdf->Cell(35, 3, 'CPF/CNPJ', 'R', 0, 'L');
+        $pdf->Cell(35, 3, 'Vencimento', 'R', 0, 'L');
+        $pdf->Cell(60, 3, 'Valor Documento', 'LR', 1, 'L');
 
-        $PDF->SetFont('Arial', '', 6);
-        $PDF->Cell(60, 3, utf8_decode('Número do Documento'), 'LR', 0, 'L');
-        $PDF->Cell(35, 3, 'CPF/CNPJ', 'R', 0, 'L');
-        $PDF->Cell(35, 3, 'Vencimento', 'R', 0, 'L');
-        $PDF->Cell(60, 3, 'Valor Documento', 'LR', 1, 'L');
+        $pdf->SetFont('Arial', '', 7);
+        $pdf->Cell(60, 5, $boleto->getNossoNumero(), 'BLR', 0, 'L');
+        $pdf->Cell(35, 5, $boleto->getCedente()->getCpfCnpj(), 'BR', 0, 'L');
+        $pdf->Cell(35, 5, $boleto->getDataVencimento()->format('d/m/Y'), 'BR', 0, 'L');
+        $pdf->Cell(60, 5, $boleto->getValorBoleto(), 'BR', 1, 'R');
 
-        $PDF->SetFont('Arial', '', 7);
-        $PDF->Cell(60, 5, $boleto->getNossoNumero(), 'BLR', 0, 'L');
-        $PDF->Cell(35, 5, $boleto->getCedente()->getCpfCnpj(), 'BR', 0, 'L');
-        $PDF->Cell(35, 5, $boleto->getDataVencimento()->format('d/m/Y'), 'BR', 0, 'L');
-        $PDF->Cell(60, 5, $boleto->getValorBoleto(), 'BR', 1, 'R');
+        $pdf->SetFont('Arial', '', 6);
+        $pdf->Cell(33, 3, '(-)Desconto/Abatimentos', 'LR', 0, 'L');
+        $pdf->Cell(32, 3, mb_convert_encoding('(-)Outras deduções', 'ISO-8859-1', 'UTF-8'), 'R', 0, 'L');
+        $pdf->Cell(32, 3, '(+)Mora/Multa', 'R', 0, 'L');
+        $pdf->Cell(33, 3, mb_convert_encoding('(+)Outros acréscimos', 'ISO-8859-1', 'UTF-8'), '', 0, 'L');
+        $pdf->Cell(60, 3, '(*)Valor Cobrado', 'LR', 1, 'L');
 
-        $PDF->SetFont('Arial', '', 6);
-        $PDF->Cell(33, 3, '(-)Desconto/Abatimentos', 'LR', 0, 'L');
-        $PDF->Cell(32, 3, utf8_decode('(-)Outras deduções'), 'R', 0, 'L');
-        $PDF->Cell(32, 3, '(+)Mora/Multa', 'R', 0, 'L');
-        $PDF->Cell(33, 3, utf8_decode('(+)Outros acréscimos'), '', 0, 'L');
-        $PDF->Cell(60, 3, '(*)Valor Cobrado', 'LR', 1, 'L');
+        $pdf->SetFont('Arial', '', 7);
+        $pdf->Cell(33, 5, '', 'BLR', 0, 'L');
+        $pdf->Cell(32, 5, '', 'BR', 0, 'L');
+        $pdf->Cell(32, 5, '', 'BR', 0, 'L');
+        $pdf->Cell(33, 5, '', 'BR', 0, 'L');
+        $pdf->Cell(60, 5, '', 'BR', 1, 'R');
 
-        $PDF->SetFont('Arial', '', 7);
-        $PDF->Cell(33, 5, '', 'BLR', 0, 'L');
-        $PDF->Cell(32, 5, '', 'BR', 0, 'L');
-        $PDF->Cell(32, 5, '', 'BR', 0, 'L');
-        $PDF->Cell(33, 5, '', 'BR', 0, 'L');
-        $PDF->Cell(60, 5, '', 'BR', 1, 'R');
+        $pdf->SetFont('Arial', '', 6);
+        $pdf->Cell(190, 3, 'Sacado', 'LR', 1, 'L');
 
-        $PDF->SetFont('Arial', '', 6);
-        $PDF->Cell(190, 3, 'Sacado', 'LR', 1, 'L');
+        $pdf->SetFont('Arial', '', 7);
+        $pdf->Cell(190, 5, mb_convert_encoding($boleto->getSacado()->getNome(), 'ISO-8859-1', 'UTF-8'), 'LR', 1, 'L');
+        $pdf->Cell(190, 5, mb_convert_encoding($boleto->getSacado()->getTipoLogradouro() . ' ' . $boleto->getSacado()->getEnderecoLogradouro() . ', ' . $boleto->getSacado()->getNumeroLogradouro(), 'ISO-8859-1', 'UTF-8'), 'LR', 1, 'L');
+        $pdf->Cell(190, 5, mb_convert_encoding($boleto->getSacado()->getCidade() . ' - ' . $boleto->getSacado()->getUf() . ' - CEP: ' . $boleto->getSacado()->getCep(), 'ISO-8859-1', 'UTF-8'), 'BLR', 1, 'L');
 
-        $PDF->SetFont('Arial', '', 7);
-        $PDF->Cell(190, 5, utf8_decode($boleto->getSacado()->getNome()), 'LR', 1, 'L');
-        $PDF->Cell(190, 5,
-            utf8_decode($boleto->getSacado()->getTipoLogradouro() . " " . $boleto->getSacado()->getEnderecoLogradouro() . ", " . $boleto->getSacado()->getNumeroLogradouro()),
-            'LR', 1, 'L'
-        );
-        $PDF->Cell(190, 5,
-            utf8_decode($boleto->getSacado()->getCidade() . " - " . $boleto->getSacado()->getUf() . " - CEP: " . $boleto->getSacado()->getCep()),
-            'BLR', 1, 'L'
-        );
+        $pdf->SetFont('Arial', '', 6);
+        $pdf->Cell(170, 3, mb_convert_encoding('Instruções', 'ISO-8859-1', 'UTF-8'), '', 0, 'L');
+        $pdf->Cell(20, 3, mb_convert_encoding('Autênticação Mecânica', 'ISO-8859-1', 'UTF-8'), '', 1, 'R');
 
-        $PDF->SetFont('Arial', '', 6);
-        $PDF->Cell(170, 3, utf8_decode('Instruções'), '', 0, 'L');
-        $PDF->Cell(20, 3, utf8_decode('Autênticação Mecânica'), '', 1, 'R');
-
-        $PDF->SetFont('Arial', '', 7);
+        $pdf->SetFont('Arial', '', 7);
 
         foreach ($boleto->getInstrucoes() as $instrucao) {
-            $PDF->Cell(190, 5, utf8_decode($instrucao), '', 1, 'L');
+            $pdf->Cell(190, 5, utf8_decode($instrucao), '', 1, 'L');
         }
 
-        $PDF->Ln();
-        $PDF->SetFont('Arial', 'B', 6);
-        $PDF->Cell(190, 2, 'Corte na linha pontilhada', '', 1, 'R');
-        $PDF->SetFont('Arial', '', 12);
-        $PDF->Cell(190, 2,
-            '--------------------------------------------------------------------------------------------------------------------------------------',
-            '', 0, 'L'
-        );
+        $pdf->Ln();
+        $pdf->SetFont('Arial', 'B', 6);
+        $pdf->Cell(190, 2, 'Corte na linha pontilhada', '', 1, 'R');
+        $pdf->SetFont('Arial', '', 12);
+        $pdf->Cell(190, 2, '--------------------------------------------------------------------------------------------------------------------------------------', '', 0, 'L');
 
-        $PDF->Ln(10);
+        $pdf->Ln(10);
 
-        $PDF->Cell(50, 10, '', 'B', 0, 'L');
-        $PDF->Image(Gerador::getDirImages() . $boleto->getBanco()->getLogomarca(), 10, 113 + ((count($boleto->getInstrucoes()) * 5) + 1), 40, 10);
+        $pdf->Cell(50, 10, '', 'B', 0, 'L');
+        $pdf->Image(Gerador::getDirImages() . $boleto->getBanco()->getLogomarca(), 10, 113 + ((count($boleto->getInstrucoes()) * 5) + 1), 40, 10);
 
-        $PDF->SetFont('Arial', 'B', 14);
-        $PDF->Cell(20, 10, $boleto->getBanco()->getCodigoComDigitoVerificador(), 'LBR', 0, 'C');
+        $pdf->SetFont('Arial', 'B', 14);
+        $pdf->Cell(20, 10, $boleto->getBanco()->getCodigoComDigitoVerificador(), 'LBR', 0, 'C');
 
-        $PDF->SetFont('Arial', 'B', 9);
-        $PDF->Cell(120, 10, $boleto->gerarLinhaDigitavel(), 'B', 1, 'R');
+        $pdf->SetFont('Arial', 'B', 9);
+        $pdf->Cell(120, 10, $boleto->gerarLinhaDigitavel(), 'B', 1, 'R');
 
-        $PDF->SetFont('Arial', '', 6);
-        $PDF->Cell(130, 3, 'Local Pagamento', 'LR', 0, 'L');
-        $PDF->Cell(60, 3, 'Vencimento', 'R', 1, 'L');
+        $pdf->SetFont('Arial', '', 6);
+        $pdf->Cell(130, 3, 'Local Pagamento', 'LR', 0, 'L');
+        $pdf->Cell(60, 3, 'Vencimento', 'R', 1, 'L');
 
-        $PDF->SetFont('Arial', '', 7);
-        $PDF->Cell(130, 5, utf8_decode($boleto->getBanco()->getLocalPagamento()), 'BLR', 0, 'L');
-        $PDF->Cell(60, 5, $boleto->getDataVencimento()->format('d/m/Y'), 'BR', 1, 'R');
+        $pdf->SetFont('Arial', '', 7);
+        $pdf->Cell(130, 5, mb_convert_encoding($boleto->getBanco()->getLocalPagamento(), 'ISO-8859-1', 'UTF-8'), 'BLR', 0, 'L');
+        $pdf->Cell(60, 5, $boleto->getDataVencimento()->format('d/m/Y'), 'BR', 1, 'R');
 
-        $PDF->SetFont('Arial', '', 6);
-        $PDF->Cell(130, 3, 'Cedente', 'LR', 0, 'L');
-        $PDF->Cell(60, 3, utf8_decode('Agência/Código cedente'), 'R', 1, 'L');
+        $pdf->SetFont('Arial', '', 6);
+        $pdf->Cell(130, 3, 'Cedente', 'LR', 0, 'L');
+        $pdf->Cell(60, 3, mb_convert_encoding('Agência/Código cedente', 'ISO-8859-1', 'UTF-8'), 'R', 1, 'L');
 
-        $PDF->SetFont('Arial', '', 7);
-        $PDF->Cell(130, 5, utf8_decode($boleto->getCedente()->getNome()), 'BLR', 0, 'L');
-        $PDF->Cell(60, 5,
-            $boleto->getCedente()->getAgencia() . " / " . $boleto->getCedente()->getContaComDv(),
-            'BR', 1, 'R'
-        );
+        $pdf->SetFont('Arial', '', 7);
+        $pdf->Cell(130, 5, mb_convert_encoding($boleto->getCedente()->getNome(), 'ISO-8859-1', 'UTF-8'), 'BLR', 0, 'L');
+        $pdf->Cell(60, 5, $boleto->getCedente()->getAgencia() . ' / ' . $boleto->getCedente()->getContaComDv(), 'BR', 1, 'R');
 
-        $PDF->SetFont('Arial', '', 6);
-        $PDF->Cell(28, 3, 'Data Documento', 'LR', 0, 'L');
-        $PDF->Cell(40, 3, utf8_decode('Número do Documento'), 'R', 0, 'L');
-        $PDF->Cell(20, 3, utf8_decode('Espécie doc.'), 'R', 0, 'L');
-        $PDF->Cell(20, 3, 'Aceite', 'R', 0, 'L');
-        $PDF->Cell(22, 3, 'Data processamento', '', 0, 'L');
-        $PDF->Cell(60, 3, utf8_decode('Carteira / Nosso número'), 'LR', 1, 'L');
+        $pdf->SetFont('Arial', '', 6);
+        $pdf->Cell(28, 3, 'Data Documento', 'LR', 0, 'L');
+        $pdf->Cell(40, 3, mb_convert_encoding('Número do Documento', 'ISO-8859-1', 'UTF-8'), 'R', 0, 'L');
+        $pdf->Cell(20, 3, mb_convert_encoding('Espécie doc.', 'ISO-8859-1', 'UTF-8'), 'R', 0, 'L');
+        $pdf->Cell(20, 3, 'Aceite', 'R', 0, 'L');
+        $pdf->Cell(22, 3, 'Data processamento', '', 0, 'L');
+        $pdf->Cell(60, 3, mb_convert_encoding('Carteira / Nosso número', 'ISO-8859-1', 'UTF-8'), 'LR', 1, 'L');
 
-        $PDF->SetFont('Arial', '', 7);
-        $PDF->Cell(28, 5, $boleto->getDataDocumento()->format('d/m/Y'), 'BLR', 0, 'L');
-        $PDF->Cell(40, 5, $boleto->getNumeroDocumento(), 'BR', 0, 'L');
-        $PDF->Cell(20, 5, $boleto->getBanco()->getEspecieDocumento(), 'BR', 0, 'L');
-        $PDF->Cell(20, 5, $boleto->getBanco()->getAceite(), 'BR', 0, 'L');
-        $PDF->Cell(22, 5, $boleto->getDataProcessamento()->format('d/m/Y'), 'BR', 0, 'L');
-        $PDF->Cell(60, 5, $boleto->getCarteiraENossoNumeroComDigitoVerificador(), 'BR', 1, 'R');
+        $pdf->SetFont('Arial', '', 7);
+        $pdf->Cell(28, 5, $boleto->getDataDocumento()->format('d/m/Y'), 'BLR', 0, 'L');
+        $pdf->Cell(40, 5, $boleto->getNumeroDocumento(), 'BR', 0, 'L');
+        $pdf->Cell(20, 5, $boleto->getBanco()->getEspecieDocumento(), 'BR', 0, 'L');
+        $pdf->Cell(20, 5, $boleto->getBanco()->getAceite(), 'BR', 0, 'L');
+        $pdf->Cell(22, 5, $boleto->getDataProcessamento()->format('d/m/Y'), 'BR', 0, 'L');
+        $pdf->Cell(60, 5, $boleto->getCarteiraENossoNumeroComDigitoVerificador(), 'BR', 1, 'R');
 
-        $PDF->SetFont('Arial', '', 6);
-        $PDF->Cell(28, 3, 'Uso do Banco', 'LR', 0, 'L');
-        $PDF->Cell(25, 3, 'Carteira', 'R', 0, 'L');
-        $PDF->Cell(15, 3, utf8_decode('Espécie'), 'R', 0, 'L');
-        $PDF->Cell(40, 3, 'Quantidade', 'R', 0, 'L');
-        $PDF->Cell(22, 3, '(x)Valor', '', 0, 'L');
-        $PDF->Cell(60, 3, '(=)Valor Documento', 'LR', 1, 'L');
+        $pdf->SetFont('Arial', '', 6);
+        $pdf->Cell(28, 3, 'Uso do Banco', 'LR', 0, 'L');
+        $pdf->Cell(25, 3, 'Carteira', 'R', 0, 'L');
+        $pdf->Cell(15, 3, mb_convert_encoding('Espécie', 'ISO-8859-1', 'UTF-8'), 'R', 0, 'L');
+        $pdf->Cell(40, 3, 'Quantidade', 'R', 0, 'L');
+        $pdf->Cell(22, 3, '(x)Valor', '', 0, 'L');
+        $pdf->Cell(60, 3, '(=)Valor Documento', 'LR', 1, 'L');
 
-        $PDF->SetFont('Arial', '', 7);
-        $PDF->Cell(28, 5, '', 'BLR', 0, 'L');
-        $PDF->Cell(25, 5, (string)$boleto->getBanco()->getCarteira(), 'BR', 0, 'L');
-        $PDF->Cell(15, 5, $boleto->getBanco()->getEspecie(), 'BR', 0, 'L');
-        $PDF->Cell(40, 5, "001", 'BR', 0, 'L');
-        $PDF->Cell(22, 5, '', 'BR', 0, 'L');
-        $PDF->Cell(60, 5, $boleto->getValorBoleto(), 'BR', 1, 'R');
+        $pdf->SetFont('Arial', '', 7);
+        $pdf->Cell(28, 5, '', 'BLR', 0, 'L');
+        $pdf->Cell(25, 5, $boleto->getBanco()->getCarteira(), 'BR', 0, 'L');
+        $pdf->Cell(15, 5, $boleto->getBanco()->getEspecie(), 'BR', 0, 'L');
+        $pdf->Cell(40, 5, "001", 'BR', 0, 'L');
+        $pdf->Cell(22, 5, '', 'BR', 0, 'L');
+        $pdf->Cell(60, 5, $boleto->getValorBoleto(), 'BR', 1, 'R');
 
-        $PDF->SetFont('Arial', '', 6);
-        $PDF->Cell(130, 3, utf8_decode('Instruções'), 'L', 0, 'L');
-        $PDF->Cell(60, 3, '(-)Desconto/Abatimentos', 'LR', 1, 'L');
+        $pdf->SetFont('Arial', '', 6);
+        $pdf->Cell(130, 3, mb_convert_encoding('Instruções', 'ISO-8859-1', 'UTF-8'), 'L', 0, 'L');
+        $pdf->Cell(60, 3, '(-)Desconto/Abatimentos', 'LR', 1, 'L');
 
         $l = 0;
         for ($i = 0; $i < 4; $i++) {
             $instrucao = isset($boleto->getInstrucoes()[$i]) ? $boleto->getInstrucoes()[$i] : null;
 
             $l++;
-            $PDF->Cell(130, 5, utf8_decode($instrucao), 'L', 0, 'L');
+            $pdf->Cell(130, 5, utf8_decode($instrucao), 'L', 0, 'L');
 
             if (1 == $l) {
-                $PDF->Cell(60, 5, '', 'LBR', 1, 'R');
+                $pdf->Cell(60, 5, '', 'LBR', 1, 'R');
             } else if (2 == $l) {
-                $PDF->SetFont('Arial', '', 6);
-                $PDF->Cell(60, 3, utf8_decode('(-)Outras deduções'), 'LR', 1, 'L');
+                $pdf->SetFont('Arial', '', 6);
+                $pdf->Cell(60, 3, utf8_decode('(-)Outras deduções'), 'LR', 1, 'L');
             } else if (3 == $l) {
-                $PDF->Cell(60, 5, '', 'LBR', 1, 'R');
+                $pdf->Cell(60, 5, '', 'LBR', 1, 'R');
             } else {
                 if (4 == $l) {
-                    $PDF->SetFont('Arial', '', 6);
-                    $PDF->Cell(60, 3, '(+)Mora/Multa', 'LR', 1, 'L');
+                    $pdf->SetFont('Arial', '', 6);
+                    $pdf->Cell(60, 3, '(+)Mora/Multa', 'LR', 1, 'L');
                 }
             }
         }
 
-        $PDF->SetFont('Arial', '', 7);
-        $PDF->Cell(130, 5, '', 'L', 0, 'L');
-        $PDF->Cell(60, 5, '', 'LBR', 1, 'R');
+        $pdf->SetFont('Arial', '', 7);
+        $pdf->Cell(130, 5, '', 'L', 0, 'L');
+        $pdf->Cell(60, 5, '', 'LBR', 1, 'R');
 
-        $PDF->Cell(130, 3, '', 'L', 0, 'L');
-        $PDF->SetFont('Arial', '', 6);
-        $PDF->Cell(60, 3, utf8_decode('(+)Outros acréscimos'), 'LR', 1, 'L');
+        $pdf->Cell(130, 3, '', 'L', 0, 'L');
+        $pdf->SetFont('Arial', '', 6);
+        $pdf->Cell(60, 3, mb_convert_encoding('(+)Outros acréscimos', 'ISO-8859-1', 'UTF-8'), 'LR', 1, 'L');
 
-        $PDF->SetFont('Arial', '', 7);
-        $PDF->Cell(130, 5, '', 'L', 0, 'L');
-        $PDF->Cell(60, 5, '', 'LBR', 1, 'R');
+        $pdf->SetFont('Arial', '', 7);
+        $pdf->Cell(130, 5, '', 'L', 0, 'L');
+        $pdf->Cell(60, 5, '', 'LBR', 1, 'R');
 
-        $PDF->Cell(130, 3, '', 'L', 0, 'L');
+        $pdf->Cell(130, 3, '', 'L', 0, 'L');
 
-        $PDF->SetFont('Arial', '', 6);
-        $PDF->Cell(60, 3, '(=)Valor cobrado', 'LR', 1, 'L');
+        $pdf->SetFont('Arial', '', 6);
+        $pdf->Cell(60, 3, '(=)Valor cobrado', 'LR', 1, 'L');
 
-        $PDF->SetFont('Arial', '', 7);
-        $PDF->Cell(130, 5, '', 'LB', 0, 'L');
-        $PDF->Cell(60, 5, '', 'LBR', 1, 'R');
+        $pdf->SetFont('Arial', '', 7);
+        $pdf->Cell(130, 5, '', 'LB', 0, 'L');
+        $pdf->Cell(60, 5, '', 'LBR', 1, 'R');
 
-        $PDF->SetFont('Arial', '', 6);
-        $PDF->Cell(190, 3, 'Sacado', 'LR', 1, 'L');
+        $pdf->SetFont('Arial', '', 6);
+        $pdf->Cell(190, 3, 'Sacado', 'LR', 1, 'L');
 
-        $PDF->SetFont('Arial', '', 7);
-        $PDF->Cell(190, 5, utf8_decode("{$boleto->getSacado()->getNome()} - {$boleto->getSacado()->getCpfCnpj()}"), 'LR', 1, 'L');
-        $PDF->Cell(190, 5,
-            utf8_decode($boleto->getSacado()->getTipoLogradouro() . " " . $boleto->getSacado()->getEnderecoLogradouro() . ", " . $boleto->getSacado()->getNumeroLogradouro()),
-            'LR', 1, 'L'
-        );
-        $PDF->Cell(190, 5,
-            utf8_decode($boleto->getSacado()->getCidade() . " - " . $boleto->getSacado()->getUf() . " - CEP: " . $boleto->getSacado()->getCep()),
-            'BLR', 1, 'L'
-        );
+        $pdf->SetFont('Arial', '', 7);
+        $pdf->Cell(190, 5, mb_convert_encoding("{$boleto->getSacado()->getNome()} - {$boleto->getSacado()->getCpfCnpj()}", 'ISO-8859-1', 'UTF-8'), 'LR', 1, 'L');
+        $pdf->Cell(190, 5, mb_convert_encoding($boleto->getSacado()->getTipoLogradouro() . " " . $boleto->getSacado()->getEnderecoLogradouro() . ", " . $boleto->getSacado()->getNumeroLogradouro(), 'ISO-8859-1', 'UTF-8'), 'LR', 1, 'L');
+        $pdf->Cell(190, 5, mb_convert_encoding($boleto->getSacado()->getCidade() . " - " . $boleto->getSacado()->getUf() . " - CEP: " . $boleto->getSacado()->getCep(), 'ISO-8859-1', 'UTF-8'), 'BLR', 1, 'L');
 
-        $PDF->SetFont('Arial', '', 6);
-        $PDF->Cell(170, 3, 'Sacador/Avalista', '', 0, 'L');
-        $PDF->Cell(20, 3, utf8_decode('Autênticação Mecânica - Ficha de Compensação'), '', 1, 'R');
+        $pdf->SetFont('Arial', '', 6);
+        $pdf->Cell(170, 3, 'Sacador/Avalista', '', 0, 'L');
+        $pdf->Cell(20, 3, mb_convert_encoding('Autênticação Mecânica - Ficha de Compensação', 'ISO-8859-1', 'UTF-8'), '', 1, 'R');
 
-        $this->fbarcode($boleto->getLinha(), $PDF);
+        $this->fbarcode($boleto->getLinha(), $pdf);
 
-        $PDF->Ln(10);
-        $PDF->SetY(260);
-        $PDF->SetFont('Arial', 'B', 6);
-        $PDF->Cell(190, 2, 'Corte na linha pontilhada', '', 1, 'R');
-        $PDF->SetFont('Arial', '', 12);
-        $PDF->Cell(190, 2,
-            '--------------------------------------------------------------------------------------------------------------------------------------',
-            '', 0, 'L'
-        );
+        $pdf->Ln(10);
+        $pdf->SetY(260);
+        $pdf->SetFont('Arial', 'B', 6);
+        $pdf->Cell(190, 2, 'Corte na linha pontilhada', '', 1, 'R');
+        $pdf->SetFont('Arial', '', 12);
+        $pdf->Cell(190, 2, '--------------------------------------------------------------------------------------------------------------------------------------', '', 0, 'L');
 
-        return $PDF;
+        return $pdf;
     }
 
-    public function fbarcode($valor, FPDF $PDF)
+    public function fbarcode($valor, FPDF $pdf)
     {
         $fino = UnidadeMedida::px2milimetros(1); // valores em px
         $largo = UnidadeMedida::px2milimetros(2.3); // valor em px
         $altura = UnidadeMedida::px2milimetros(40); // valor em px
 
-        $barcodes[0] = "00110";
-        $barcodes[1] = "10001";
-        $barcodes[2] = "01001";
-        $barcodes[3] = "11000";
-        $barcodes[4] = "00101";
-        $barcodes[5] = "10100";
-        $barcodes[6] = "01100";
-        $barcodes[7] = "00011";
-        $barcodes[8] = "10010";
-        $barcodes[9] = "01010";
+        $barcodes[0] = '00110';
+        $barcodes[1] = '10001';
+        $barcodes[2] = '01001';
+        $barcodes[3] = '11000';
+        $barcodes[4] = '00101';
+        $barcodes[5] = '10100';
+        $barcodes[6] = '01100';
+        $barcodes[7] = '00011';
+        $barcodes[8] = '10010';
+        $barcodes[9] = '01010';
         for ($f1 = 9; $f1 >= 0; $f1--) {
             for ($f2 = 9; $f2 >= 0; $f2--) {
                 $f = ($f1 * 10) + $f2;
@@ -300,14 +266,14 @@ class GeradorBoleto
             }
         }
 
-        $PDF->Image(Gerador::getDirImages() . '/p.png', $PDF->GetX(), $PDF->GetY(), $fino, $altura);
-        $PDF->SetX($PDF->GetX() + $fino);
-        $PDF->Image(Gerador::getDirImages() . '/b.png', $PDF->GetX(), $PDF->GetY(), $fino, $altura);
-        $PDF->SetX($PDF->GetX() + $fino);
-        $PDF->Image(Gerador::getDirImages() . '/p.png', $PDF->GetX(), $PDF->GetY(), $fino, $altura);
-        $PDF->SetX($PDF->GetX() + $fino);
-        $PDF->Image(Gerador::getDirImages() . '/b.png', $PDF->GetX(), $PDF->GetY(), $fino, $altura);
-        $PDF->SetX($PDF->GetX() + $fino);
+        $pdf->Image(Gerador::getDirImages() . '/p.png', $pdf->GetX(), $pdf->GetY(), $fino, $altura);
+        $pdf->SetX($pdf->GetX() + $fino);
+        $pdf->Image(Gerador::getDirImages() . '/b.png', $pdf->GetX(), $pdf->GetY(), $fino, $altura);
+        $pdf->SetX($pdf->GetX() + $fino);
+        $pdf->Image(Gerador::getDirImages() . '/p.png', $pdf->GetX(), $pdf->GetY(), $fino, $altura);
+        $pdf->SetX($pdf->GetX() + $fino);
+        $pdf->Image(Gerador::getDirImages() . '/b.png', $pdf->GetX(), $pdf->GetY(), $fino, $altura);
+        $pdf->SetX($pdf->GetX() + $fino);
 
         $texto = $valor;
         if ((strlen($texto) % 2) <> 0) {
@@ -325,8 +291,8 @@ class GeradorBoleto
                     $f1 = $largo;
                 }
 
-                $PDF->Image(Gerador::getDirImages() . '/p.png', $PDF->GetX(), $PDF->GetY(), $f1, $altura);
-                $PDF->SetX($PDF->GetX() + $f1);
+                $pdf->Image(Gerador::getDirImages() . '/p.png', $pdf->GetX(), $pdf->GetY(), $f1, $altura);
+                $pdf->SetX($pdf->GetX() + $f1);
 
                 if (substr($f, $i, 1) == "0") {
                     $f2 = $fino;
@@ -334,24 +300,24 @@ class GeradorBoleto
                     $f2 = $largo;
                 }
 
-                $PDF->Image(Gerador::getDirImages() . '/b.png', $PDF->GetX(), $PDF->GetY(), $f2, $altura);
-                $PDF->SetX($PDF->GetX() + $f2);
+                $pdf->Image(Gerador::getDirImages() . '/b.png', $pdf->GetX(), $pdf->GetY(), $f2, $altura);
+                $pdf->SetX($pdf->GetX() + $f2);
             }
         }
 
-        $PDF->Image(Gerador::getDirImages() . '/p.png', $PDF->GetX(), $PDF->GetY(), $largo, $altura);
-        $PDF->SetX($PDF->GetX() + $largo);
-        $PDF->Image(Gerador::getDirImages() . '/b.png', $PDF->GetX(), $PDF->GetY(), $fino, $altura);
-        $PDF->SetX($PDF->GetX() + $fino);
-        $PDF->Image(Gerador::getDirImages() . '/p.png', $PDF->GetX(), $PDF->GetY(), $fino, $altura);
-        $PDF->SetX($PDF->GetX() + $fino);
-        $PDF->Image(
+        $pdf->Image(Gerador::getDirImages() . '/p.png', $pdf->GetX(), $pdf->GetY(), $largo, $altura);
+        $pdf->SetX($pdf->GetX() + $largo);
+        $pdf->Image(Gerador::getDirImages() . '/b.png', $pdf->GetX(), $pdf->GetY(), $fino, $altura);
+        $pdf->SetX($pdf->GetX() + $fino);
+        $pdf->Image(Gerador::getDirImages() . '/p.png', $pdf->GetX(), $pdf->GetY(), $fino, $altura);
+        $pdf->SetX($pdf->GetX() + $fino);
+        $pdf->Image(
             Gerador::getDirImages() . '/b.png',
-            $PDF->GetX(),
-            $PDF->GetY(),
+            $pdf->GetX(),
+            $pdf->GetY(),
             UnidadeMedida::px2milimetros(1),
             $altura
         );
-        $PDF->SetX($PDF->GetX() + UnidadeMedida::px2milimetros(1));
+        $pdf->SetX($pdf->GetX() + UnidadeMedida::px2milimetros(1));
     }
 } 

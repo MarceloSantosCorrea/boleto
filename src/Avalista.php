@@ -2,47 +2,20 @@
 
 namespace Boleto;
 
-/**
- * Class Avalista
- * @package Simonetti\Boleto
- */
-class Avalista
+readonly class Avalista
 {
-    /**
-     * @var string
-     */
-    private $nome;
+    public function __construct(
+        private string $nome,
+        private string $cpfCnpj
+    ) {}
 
-    /**
-     * @var string
-     */
-    private $cpfCnpj;
-
-    /**
-     * Avalista constructor.
-     * @param string $nome
-     * @param string $cpfCnpj
-     */
-    public function __construct($nome, $cpfCnpj)
-    {
-        $this->nome = $nome;
-        $this->cpfCnpj = $cpfCnpj;
-    }
-
-    /**
-     * @return string
-     */
-    public function getNome()
+    public function getNome(): string
     {
         return $this->nome;
     }
 
-    /**
-     * @return string
-     */
-    public function getCpfCnpj()
+    public function getCpfCnpj(): string
     {
         return $this->cpfCnpj;
     }
-
 }
