@@ -78,7 +78,7 @@ class Boleto
         $this->demonstrativos = $demonstrativos;
     }
 
-    public function addDemostrativo(string $demonstrativo): void
+    public function addDemostrativo(mixed $demonstrativo): void
     {
         $this->demonstrativos[] = $demonstrativo;
     }
