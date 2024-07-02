@@ -12,7 +12,7 @@ class Sicredi extends Banco
     protected function init(): void
     {
         $this->setEspecie('R$');
-        $this->setEspecieDocumento('OS');
+        $this->setEspecieDocumento('DMI');
         $this->setCodigo('748');
         $this->setDigitoVerificador('X');
         $this->setNome('Sicredi');
@@ -29,9 +29,13 @@ class Sicredi extends Banco
     public function getDigitoVerificadorNossoNumero(Boleto $boleto): int
     {
         // |Agência | Posto | Cedente | Ano | Byte | Sequencial(Nosso número) |
-        $nnum = $boleto->getCedente()->getAgencia() . $this->getPosto() .
-            $boleto->getCedente()->getCodigoCedente() . $boleto->getDataDocumento()->format('y')
-            . $this->getByte() . $boleto->getNossoNumero();
+        $nnum =
+            $boleto->getCedente()->getAgencia() .
+            $this->getPosto() .
+            $boleto->getCedente()->getCodigoCedente() .
+            $boleto->getDataDocumento()->format('y') .
+            $this->getByte() .
+            $boleto->getNossoNumero();
 
         //dv do nosso número
         return $this->digitoVerificadorNossoNumero($nnum);
@@ -44,7 +48,11 @@ class Sicredi extends Banco
 
     public function getNossoNumeroComDigitoVerificador(Boleto $boleto): int|string
     {
-        return $boleto->getDataDocumento()->format('y') . $this->getByte() . $boleto->getNossoNumero();
+        return
+            $boleto->getDataDocumento()->format('y') .
+            $this->getByte() .
+            $boleto->getNossoNumero() .
+            $this->getDigitoVerificadorNossoNumero($boleto);
     }
 
     public function getCarteiraENossoNumeroComDigitoVerificador(Boleto $boleto): string
