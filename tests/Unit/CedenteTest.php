@@ -11,6 +11,7 @@ test('deve testar getters e setters', function () {
     $cedente->setDvAgencia('0');
     $cedente->setConta('1234567');
     $cedente->setDvConta('1');
+    $cedente->setCodigoCedente('91107');
 
     expect($cedente->getNome())->toEqual('Marcelo Corrêa')
         ->and($cedente->getCpfCnpj())->toEqual('279.915.550-20')
@@ -21,5 +22,6 @@ test('deve testar getters e setters', function () {
         ->and($cedente->getDvAgencia())->toEqual('0')
         ->and($cedente->getConta())->toEqual('1234567')
         ->and($cedente->getDvConta())->toEqual('1')
-        ->and($cedente->getContaComDv())->toEqual('1234567-1');
+        ->and($cedente->getContaComDv())->toEqual('1234567-1')
+        ->and($cedente->getCodigoCedente())->toEqual('91107');
 });
