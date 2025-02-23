@@ -176,7 +176,13 @@ class Boleto
         $mes = $data[1];
         $dia = $data[0];
 
-        return (abs((Data::_dateToDays('1997', '10', '07')) - (Data::_dateToDays($ano, $mes, $dia))));
+        $fator = (abs((Data::_dateToDays('1997', '10', '07')) - (Data::_dateToDays($ano, $mes, $dia))));
+
+        if ($fator > 9999) {
+            $fator = (abs((Data::_dateToDays('2022', '05', '29')) - (Data::_dateToDays($ano, $mes, $dia))));
+        }
+
+        return $fator;
     }
 
     public function getDigitoVerificadorCodigoBarras(): int
