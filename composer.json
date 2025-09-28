@@ -16,11 +16,16 @@
     }
   ],
   "require": {
-    "php": ">=8.2",
+    "php": "^8.2 || ^8.3 || ^8.4",
     "setasign/fpdf": "~1.8",
     "twig/twig": "^3.0",
-    "picqer/php-barcode-generator": "^0.1.0",
-    "mpdf/mpdf": "^8.2"
+    "picqer/php-barcode-generator": "^0.1.0 || ^2.0",
+    "mpdf/mpdf": "^8.2.6"
+  },
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
   },
   "autoload": {
     "psr-4": {
@@ -30,11 +35,6 @@
   "autoload-dev": {
     "psr-4": {
       "Tests\\": "tests/"
-    }
-  },
-  "config": {
-    "allow-plugins": {
-      "pestphp/pest-plugin": true
     }
   },
   "require-dev": {

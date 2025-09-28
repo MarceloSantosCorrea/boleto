@@ -2,11 +2,11 @@
 
 namespace Boleto;
 
-readonly class Avalista
+class Avalista
 {
     public function __construct(
-        private string $nome,
-        private string $cpfCnpj
+        private readonly string $nome,
+        private readonly string $cpfCnpj
     ) {}
 
     public function getNome(): string
